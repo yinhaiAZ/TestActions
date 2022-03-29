@@ -1,0 +1,40 @@
+name: Render .html from .rmd in repo as gh-pages
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Install rmarkdown
+        run: Rscript -e 'install.packages(c("rmarkdown", "prettydoc"))'
+      - name: Render html
+        run: Rscript -e 'rmarkdown::render("index.Rmd")'
+      - name: Push changes
+        run: |
+          git config user.name 'GitHub Actions'
+          git config user.email 'email@github.com'
+          git add index.html
+          git commit -m "Automatic render"
+          git push origin HEAD:${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
