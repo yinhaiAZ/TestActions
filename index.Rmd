@@ -1,0 +1,12 @@
+---
+title: "Yinhai Test report"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+## Hello world
+
+```{r}
+1 + 2
+```
